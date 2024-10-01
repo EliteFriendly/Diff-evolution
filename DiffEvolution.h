@@ -6,13 +6,14 @@
 #include<thread>
 #include "DiffMutation.h"
 #include<ctime>
+#include <functional>
 
 using namespace std;
 
 class DiffEvolution
 {
 private:
-	double (*func)(vector<double>);
+	function<double(vector<double>)> func;
 	vector <double> limitsDimension;//Ограничения каждой оси
 	double F;//Масштабирующий фактор
 	double Cr;//Вероятность скрещивания
@@ -27,13 +28,18 @@ private:
 	void surviveCrossover(IndividualDiffEvolution);
 	void saveBest();
 public:
-	DiffEvolution(double(*func)(vector<double>), vector<double> limitsDimension, string typeMut, string aim) :func(func),
+	DiffEvolution(function<double(vector<double>)> func, vector<double> limitsDimension, string typeMut, string aim) :func(func),
 		limitsDimension(limitsDimension), aim(aim)
 	{
 		mutation.setType(typeMut);
 		mutation.setLimits(limitsDimension);
 	}
 	void startSearch(double acc,double F, double Cr, int N,int generation);
+
+
+	vector<double> getBestCoordinates() {
+		return best.getCoordinats();
+	}
 
 	double getBest() {
 		return func(best.getCoordinats());

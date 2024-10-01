@@ -8,8 +8,8 @@
 using namespace std;
 
 const double PI = 3.1415926535897932;
+int dimension = 100;
 
-int dimension = 2;
 mutex mtx;
 
 
@@ -23,6 +23,7 @@ double funcSphere(vector<double> x) {
 
 double funcElliptic(vector<double> x) {
 	double y = 0;
+	int dimension = 100;
 	for (int i = 0; i < dimension; i++) {
 		y += pow(10, 6 * ((i - 1) / (dimension - 1))) * x[i] * x[i];
 	}
@@ -58,19 +59,78 @@ void foo(int i) {
 	cout << i << endl;
 }
 
+void thr() {
+
+	int dimension2 = 100;
+	vector<double> limits(dimension2 * 2);
+	for (int i = 0; i < dimension2 * 2; i++) {
+		if (i % 2) {
+			limits[i] = 20;
+		}
+		else {
+			limits[i] = -20;
+		}
+	}
+
+	DiffEvolution proba2(funcElliptic, limits, "best1", "min");
+	proba2.startSearch(0.1, 0.5, 0.5, 500, 100);
+}
+
+
+
+
+
+class food
+{
+public:
+	void pr(vector<double> inp) {
+		for (int i = 0; i < inp.size(); i++) {
+			for (int j = 0; j < 100; j++) {
+				for (int w = 0; w < 1000; w++) {
+					inp[i]=funcSphere(inp);
+				}
+			}
+		}
+	}
+
+
+
+
+};
+
+void f() {
+
+	vector<double> fo(100, 0);
+	
+	food fooooo;
+
+	fooooo.pr(fo);
+
+}
 
 
 
 void main() {
-	vector<double> in(2);
-	ofstream out("Out.txt");
-	for (double i = -2; i <= 2; i += 0.1) {
-		for (double j = -2; j <= 2; j += 0.1) {
-			in[0] = i;
-			in[1] = j;
-			out << in[0] << "\t" << in[1] << "\t" << funcSphere(in) << endl;
-		}
-	}
+
+	srand(45);
+	setlocale(0, "");
+	clock_t start = clock();
+	thr();
+	clock_t middle = clock();
+	
+	/*f();
+	f();*/
+
+	thread thr1(thr);
+	thread thr2(thr);
+
+	thr1.join();
+	thr2.join();
+
+	
+	clock_t end = clock();\
+	//printf("Work time thread: %f seconds\n", double(end - middle) / CLOCKS_PER_SEC);
+	
 }
 
 

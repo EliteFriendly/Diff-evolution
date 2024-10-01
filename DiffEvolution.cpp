@@ -1,4 +1,4 @@
-#include "DiffEvolution.h"
+#include "F:\Visual Studio\repos\Diff evolution\DiffEvolution.h"
 
 
 IndividualDiffEvolution DiffEvolution::crossover(IndividualDiffEvolution donor)
@@ -52,26 +52,49 @@ void DiffEvolution::startSearch(double acc, double F, double Cr, int N, int gene
 	mutation.setF(F);//Установака для корректной работы мутации
 
 	arrIndividuals.resize(N);
+
+	
+	
+
 	//std::sort(arrIndividuals.begin(), arrIndividuals.end());
 	//Генерация первой популяции
 	for (int i = 0; i < N; i++) {
-		IndividualDiffEvolution ind(limitsDimension, func, acc, aim);
-		arrIndividuals[i] = ind;
+		//IndividualDiffEvolution ind(limitsDimension, func, acc, aim);
+		arrIndividuals[i] = IndividualDiffEvolution (limitsDimension, func, acc, aim);
+		arrIndividuals[i].calcFitness();
 	}
+
+	
 	saveBest();
+
 
 	//Начало работы основной части программы
 	IndividualDiffEvolution newInd;
 	for (int i = 0; i < generations; i++)
 	{
+		clock_t start = clock();
 		for (int j = 0; j < N; j++) {
+			
 			newInd = mutation.getDonor(arrIndividuals,best);
-			newInd = crossover(newInd);
-			surviveCrossover(newInd);
+			//newInd = crossover(newInd);
+			//newInd.calcFitness();
+			//surviveCrossover(newInd);
+			if (j == 10 and i == 0) {
+				clock_t end = clock();
+				cout << "Work time in thr = " << &thread::get_id << " time = " << double(end - start) /*/ CLOCKS_PER_SEC*/ << endl;
+
+			}
 		}
+
+		
+
+
 		saveBest();
 	}
 	
+	
+
+
 	/*for (int i = 0; i < (limitsDimension.size() / 2); i++) {
 		cout << "x =" << best.getCoordinats()[i] << endl;
 	}

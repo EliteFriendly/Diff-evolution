@@ -1,7 +1,7 @@
 #include "IndividualDiffEvolution.h"
+#include <functional>
 
-
-IndividualDiffEvolution::IndividualDiffEvolution(vector <double> limitsDimension, double(*func)(vector<double>), double acc,string aim) :
+IndividualDiffEvolution::IndividualDiffEvolution(vector <double> limitsDimension, function<double(vector<double>)> func, double acc,string aim) :
 	limitsDimension(limitsDimension), func(func), acc(acc), aim(aim) {
 	coordinats.resize(limitsDimension.size() / 2);
 	int n;//Хранит количество точек, временна
