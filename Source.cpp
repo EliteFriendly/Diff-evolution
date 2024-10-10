@@ -4,6 +4,7 @@
 #include "DiffEvolution.h"
 #include <fstream>
 #include <mutex>
+#include "123/DiffEvolutionO.h"
 #include <ctime>
 using namespace std;
 
@@ -13,7 +14,7 @@ int dimension = 100;
 mutex mtx;
 
 
-double funcSphere(vector<double> x) {
+double funcSphere(double* x) {
 	double y = 0;
 	for (int i = 0; i < dimension; i++) {
 		y += x[i] * x[i];
@@ -61,9 +62,8 @@ void foo(int i) {
 
 void thr() {
 
-	int dimension2 = 100;
-	vector<double> limits(dimension2 * 2);
-	for (int i = 0; i < dimension2 * 2; i++) {
+	double* limits = new double[dimension*2];
+	for (int i = 0; i < dimension * 2; i++) {
 		if (i % 2) {
 			limits[i] = 20;
 		}
@@ -72,65 +72,70 @@ void thr() {
 		}
 	}
 
-	DiffEvolution proba2(funcElliptic, limits, "best1", "min");
-	proba2.startSearch(0.1, 0.5, 0.5, 500, 100);
-}
+	DiffEvolution proba2(funcSphere, limits, dimension, "best1", "min");
+	proba2.startSearch(0.1, 0.5, 0.5, 500, 500);
 
-
-
-
-
-class food
-{
-public:
-	void pr(vector<double> inp) {
-		for (int i = 0; i < inp.size(); i++) {
-			for (int j = 0; j < 100; j++) {
-				for (int w = 0; w < 1000; w++) {
-					inp[i]=funcSphere(inp);
-				}
-			}
-		}
-	}
-
-
-
-
-};
-
-void f() {
-
-	vector<double> fo(100, 0);
+	/*for (int i = 0; i < dimension; i++)
+	{
+		cout << proba2.getBestCoordinates()[i] << ' ';
+	}*/
 	
-	food fooooo;
-
-	fooooo.pr(fo);
-
 }
+
+
+
+
+
+
+double tu(vector<int> x) {
+	double y = 0;
+	for (int i = 0; i < dimension; i++) {
+		y += x[i] * x[i];
+	}
+	return y;
+}
+
+
+
+
+
+
 
 
 
 void main() {
 
+	
 	srand(45);
-	setlocale(0, "");
 	clock_t start = clock();
 	thr();
+	thr();
+	thr();
+
+	//thr3.join();
 	clock_t middle = clock();
-	
-	/*f();
-	f();*/
+	printf("Work time thread: %f seconds\n", double(middle - start) / CLOCKS_PER_SEC);
 
-	thread thr1(thr);
-	thread thr2(thr);
+	//setlocale(0, "");
+	//clock_t start = clock();
+	////thr();
+	//f(100);
+	//f(100);
+	//clock_t middle = clock();
+	//printf("Work time thread: %f seconds\n", double(middle - start) / CLOCKS_PER_SEC);
+	//
+	//
 
-	thr1.join();
-	thr2.join();
+	//thread thr1(f, 100);
+	//thread thr2(f, 100);
 
-	
-	clock_t end = clock();\
+	//thr1.join();
+	//thr2.join();
+
+	//
+	//clock_t end = clock();\
 	//printf("Work time thread: %f seconds\n", double(end - middle) / CLOCKS_PER_SEC);
-	
+	//
 }
 
 

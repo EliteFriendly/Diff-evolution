@@ -1,16 +1,16 @@
-#include "DiffEvolution.h"
+#include "F:\Visual Studio\repos\Diff evolution\DiffEvolution.h"
 
 
 IndividualDiffEvolution DiffEvolution::crossover(IndividualDiffEvolution donor)
 {
 	
 	int ammount=0;//Количество раз когда поменялся вектор
-	int number = rand() % N;//Номер родителя
+	int number = rand() % arrIndividuals.size();//Номер родителя
 	double rep;//Вероятность поменять координаты
-	double* coordinates = donor.getCoordinats();
+	vector<double> coordinates = donor.getCoordinats();
 
 	//Процесс изменения гена
-	for (int i = 0; i < ammDimens; i++) {
+	for (int i = 0; i < (limitsDimension.size() / 2); i++) {
 		rep = rand() % 1000 / 1000.0;
 		if (rep < Cr) {
 			coordinates[i] = arrIndividuals[number].getCoordinats()[i];
@@ -18,7 +18,7 @@ IndividualDiffEvolution DiffEvolution::crossover(IndividualDiffEvolution donor)
 		}
 	}
 	if (ammount == 0) {//В случае если ген ни разу не поменялся
-		int ran = rand() % ammDimens;
+		int ran = rand() % (limitsDimension.size() / 2);
 		coordinates[ran] = arrIndividuals[number].getCoordinats()[ran];
 	}
 	donor.replaceCoordinats(coordinates);
@@ -51,7 +51,7 @@ void DiffEvolution::startSearch(double acc, double F, double Cr, int N, int gene
 	DiffEvolution::generations = generations;
 	mutation.setF(F);//Установака для корректной работы мутации
 
-	arrIndividuals = new IndividualDiffEvolution[N];
+	arrIndividuals.resize(N);
 
 	
 	
@@ -59,10 +59,9 @@ void DiffEvolution::startSearch(double acc, double F, double Cr, int N, int gene
 	//std::sort(arrIndividuals.begin(), arrIndividuals.end());
 	//Генерация первой популяции
 	for (int i = 0; i < N; i++) {
-		IndividualDiffEvolution ind(limitsDimension, func, ammDimens, acc, aim);
-		arrIndividuals[i] = ind;
+		//IndividualDiffEvolution ind(limitsDimension, func, acc, aim);
+		arrIndividuals[i] = IndividualDiffEvolution (limitsDimension, func, acc, aim);
 		arrIndividuals[i].calcFitness();
-		ind.~IndividualDiffEvolution();
 	}
 
 	
@@ -73,13 +72,18 @@ void DiffEvolution::startSearch(double acc, double F, double Cr, int N, int gene
 	IndividualDiffEvolution newInd;
 	for (int i = 0; i < generations; i++)
 	{
+		clock_t start = clock();
 		for (int j = 0; j < N; j++) {
 			
-			newInd = mutation.getDonor(arrIndividuals,best,ammDimens);
-			newInd = crossover(newInd);
-			newInd.calcFitness();
-			surviveCrossover(newInd);
-			newInd.~IndividualDiffEvolution();
+			newInd = mutation.getDonor(arrIndividuals,best);
+			//newInd = crossover(newInd);
+			//newInd.calcFitness();
+			//surviveCrossover(newInd);
+			if (j == 10 and i == 0) {
+				clock_t end = clock();
+				cout << "Work time in thr = " << &thread::get_id << " time = " << double(end - start) /*/ CLOCKS_PER_SEC*/ << endl;
+
+			}
 		}
 
 		
