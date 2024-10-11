@@ -53,10 +53,6 @@ void DiffEvolution::startSearch(double acc, double F, double Cr, int N, int gene
 
 	arrIndividuals = new IndividualDiffEvolution[N];
 
-	
-	
-
-	//std::sort(arrIndividuals.begin(), arrIndividuals.end());
 	//Генерация первой популяции
 	for (int i = 0; i < N; i++) {
 		IndividualDiffEvolution ind(limitsDimension, func, ammDimens, acc, aim);
@@ -64,10 +60,8 @@ void DiffEvolution::startSearch(double acc, double F, double Cr, int N, int gene
 		arrIndividuals[i].calcFitness();
 		ind.~IndividualDiffEvolution();
 	}
-
 	
 	saveBest();
-
 
 	//Начало работы основной части программы
 	IndividualDiffEvolution newInd;
@@ -81,19 +75,7 @@ void DiffEvolution::startSearch(double acc, double F, double Cr, int N, int gene
 			surviveCrossover(newInd);
 			newInd.~IndividualDiffEvolution();
 		}
-
-		
-
-
 		saveBest();
 	}
 	
-	
-
-
-	/*for (int i = 0; i < (limitsDimension.size() / 2); i++) {
-		cout << "x =" << best.getCoordinats()[i] << endl;
-	}
-	cout << func(best.getCoordinats());*/
-
 }
